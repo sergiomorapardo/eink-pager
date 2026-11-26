@@ -12,6 +12,8 @@ Firmware plan (PlatformIO + GxEPD2):
    All logic lives on the server; the device is intentionally "dumb".
 3. Partial refresh when the image changed (compare hashes), full refresh every ~20 cycles
    to clear ghosting.
-4. Deep sleep 60 s. Button for an immediate refresh.
+4. Deep sleep 60 s.
+5. "Visto" (seen) button: a press marks current alerts as seen (planned `POST /ack`);
+   a long press refreshes immediately.
 
 Start the server with `--host 0.0.0.0` so the ESP32 can reach it.
