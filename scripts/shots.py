@@ -17,7 +17,6 @@ import shutil
 import subprocess
 import sys
 import tempfile
-import time
 from datetime import datetime
 from pathlib import Path
 
@@ -30,10 +29,11 @@ from pager.render import render  # noqa: E402
 from pager.state import State  # noqa: E402
 
 CHROME_CANDIDATES = [
-    os.environ.get("CHROME", ""),
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     "google-chrome",
+    "google-chrome-stable",
     "chromium",
+    "chromium-browser",
 ]
 
 # Colores de una pantalla e-paper real: el "blanco" es gris cálido y el negro no es puro.
@@ -67,10 +67,30 @@ def tint(frame: Image.Image, scale: int) -> Image.Image:
 
 
 def find_chrome() -> str:
+    forced = os.environ.get("CHROME")
+    if forced:  # si lo defines, se usa ese o se falla, nunca otro en silencio
+        if os.path.exists(forced) or shutil.which(forced):
+            return forced
+        sys.exit(f"CHROME={forced} no existe.")
     for c in CHROME_CANDIDATES:
-        if c and (os.path.exists(c) or shutil.which(c)):
+        if os.path.exists(c) or shutil.which(c):
             return c
     sys.exit("No encontré Chrome. Define CHROME con la ruta del ejecutable.")
+
+
+def screenshot(html: Path, out: Path, profile: Path) -> None:
+    """Captura html en out con Chrome headless y comprueba que de verdad se escribió."""
+    chrome = find_chrome()  # antes de borrar nada: si falla, la imagen anterior se conserva
+    out.unlink(missing_ok=True)
+    cmd = [chrome, "--headless=new", "--disable-gpu", "--hide-scrollbars",
+           f"--user-data-dir={profile}", "--force-device-scale-factor=1",
+           "--window-size=1600,1080", f"--screenshot={out}", html.as_uri()]
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+    except subprocess.TimeoutExpired:
+        sys.exit("Chrome no terminó en 60 s; no se generó el hero.")
+    if result.returncode != 0 or not out.exists() or out.stat().st_size == 0:
+        sys.exit(f"Chrome no escribió {out.name} (código {result.returncode}):\n{result.stderr[-2000:]}")
 
 
 def main():
@@ -86,18 +106,12 @@ def main():
         if args.no_hero:
             return
 
-        tint(frame, 5).save(tmp / "frame.png")
+        tint(frame, 3).save(tmp / "frame.png")  # 3× exacto = tamaño de la pantalla en hero.html
         html = (REPO / "scripts/hero.html").read_text().replace("{{FRAME}}", "frame.png")
         (tmp / "hero.html").write_text(html)
         out = REPO / "docs/images/hero.png"
         out.parent.mkdir(parents=True, exist_ok=True)
-        subprocess.run(
-            [find_chrome(), "--headless=new", "--disable-gpu", "--hide-scrollbars",
-             "--force-device-scale-factor=1", "--window-size=1600,1080",
-             f"--screenshot={out}", (tmp / "hero.html").as_uri()],
-            check=True, capture_output=True, timeout=60,
-        )
-        time.sleep(0.2)
+        screenshot(tmp / "hero.html", out, tmp / "chrome-profile")
         print(out.relative_to(REPO))
 
 

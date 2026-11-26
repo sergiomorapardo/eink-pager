@@ -74,7 +74,7 @@ only on a trusted network, when the device needs to reach it.
 
 ![Raw 1-bit frame, scaled 3×](docs/preview.png)
 
-*The raw frame the server serves at `/frame.png`. "permiso: Bash" means a session needs permission
+*The 1-bit frame the server serves at `/frame.png` (296×128), scaled 3× here, with sample data. "permiso: Bash" means a session needs permission
 to run Bash, "listo" means it finished, and when nothing needs you the middle area reads
 "Nada te necesita".*
 

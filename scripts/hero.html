@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <title>eink-pager hero</title>
@@ -35,11 +35,11 @@
   .sub { font-size: 16px; color: #5d6577; margin-top: 12px; }
 
   /* Escena */
-  .scene { position: absolute; top: 372px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 56px; }
+  .scene { position: absolute; top: 330px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 40px; }
 
   /* Dispositivo */
   .device {
-    position: relative; width: 948px; height: 452px; border-radius: 56px; padding: 52px 0 0 50px;
+    position: relative; width: 1076px; height: 516px; border-radius: 56px; padding: 52px 0 0 50px;
     background: linear-gradient(160deg, #fbfaf7 0%, #efede7 55%, #e2dfd7 100%);
     box-shadow:
       inset 0 2px 1px rgba(255,255,255,.9),
@@ -53,16 +53,16 @@
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .48  0 0 0 0 .44  0 0 0 .12 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   }
   .bezel {
-    width: 768px; height: 348px; border-radius: 18px; padding: 14px;
+    width: 916px; height: 412px; border-radius: 18px; padding: 14px;
     background: linear-gradient(180deg, #2b2d31, #3a3c41);
     box-shadow: inset 0 2px 4px rgba(0,0,0,.6), 0 1px 0 rgba(255,255,255,.8);
   }
   .screen {
-    position: relative; width: 740px; height: 320px; border-radius: 4px; overflow: hidden;
+    position: relative; width: 888px; height: 384px; border-radius: 4px; overflow: hidden;
     background: #e4e2db;
     box-shadow: inset 0 1px 6px rgba(0,0,0,.35);
   }
-  .screen img { display: block; width: 740px; height: 320px; filter: contrast(1.02); }
+  .screen img { display: block; width: 888px; height: 384px; image-rendering: pixelated; }
   .screen::before { /* grano del papel electrónico */
     content: ""; position: absolute; inset: 0; mix-blend-mode: multiply; opacity: .55;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55  0 0 0 0 .54  0 0 0 0 .5  0 0 0 .18 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>");
@@ -71,7 +71,7 @@
     content: ""; position: absolute; inset: 0;
     background: linear-gradient(115deg, rgba(255,255,255,.22) 0%, rgba(255,255,255,0) 38%, rgba(255,255,255,0) 70%, rgba(255,255,255,.08) 100%);
   }
-  .controls { position: absolute; right: 44px; top: 0; bottom: 0; width: 82px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; }
+  .controls { position: absolute; right: 40px; top: 0; bottom: 0; width: 82px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; }
   .led { width: 9px; height: 9px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #9fe0b8, #2f9e63 70%); box-shadow: 0 0 10px rgba(60,190,120,.55); }
   .btn {
     width: 70px; height: 70px; border-radius: 50%;
@@ -88,7 +88,7 @@
 
   /* Leyenda */
   .legend {
-    width: 400px; border-radius: 28px; padding: 26px 28px;
+    width: 360px; border-radius: 28px; padding: 26px 28px;
     background: rgba(255,255,255,.62); border: 1px solid rgba(255,255,255,.9);
     box-shadow: 0 20px 50px -20px rgba(40,50,80,.25); backdrop-filter: blur(14px);
   }
@@ -107,18 +107,18 @@
   <div class="top">
     <div class="brand">
       <div class="logo"><i></i></div>
-      <div><b>eink-pager</b><small>tinta electrónica · 296×128</small></div>
+      <div><b>eink-pager</b><small>e-paper · 296×128</small></div>
     </div>
     <div class="pills">
-      <span class="pill">Servidor local</span>
-      <span class="pill" style="--dot:#8a8f9c">Datos de ejemplo</span>
+      <span class="pill">Local server</span>
+      <span class="pill" style="--dot:#8a8f9c">Sample data</span>
     </div>
   </div>
 
   <div class="head">
-    <div class="eyebrow">TU ATENCIÓN, PROTEGIDA</div>
-    <h1>Solo lo que te necesita.</h1>
-    <div class="sub">Un vistazo y sigues con lo tuyo. Sin terminales, bandejas ni pestañas abiertas.</div>
+    <div class="eyebrow">ATTENTION, PROTECTED</div>
+    <h1>Only what needs you.</h1>
+    <div class="sub">One glance, then back to work. No terminals, inboxes, or open tabs to watch.</div>
   </div>
 
   <div class="scene">
@@ -134,15 +134,15 @@
     </div>
 
     <div class="legend">
-      <h2>Tres zonas, una prioridad</h2>
-      <div class="hint">Lo urgente se dibuja invertido.</div>
-      <div class="row"><span class="num">01</span><div><b>Consumo del plan</b><p>Ventanas de 5 h y 7 días de Claude, con el tiempo hasta el reinicio.</p></div></div>
-      <div class="row"><span class="num">02</span><div><b>Sesiones de Claude Code</b><p>Las que piden permiso o terminaron, con cuánto llevan esperando.</p></div></div>
-      <div class="row"><span class="num">03</span><div><b>Correo y agenda</b><p>Tu próximo evento y solo los correos que piden una acción hoy.</p></div></div>
-      <div class="foot">El dispositivo solo descarga una imagen de 1 bit. Toda la lógica corre en tu Mac.</div>
+      <h2>Three zones, one priority</h2>
+      <div class="hint">Permission requests are drawn inverted.</div>
+      <div class="row"><span class="num">01</span><div><b>Plan usage</b><p>Claude's 5-hour and 7-day windows, plus time until the 5-hour reset.</p></div></div>
+      <div class="row"><span class="num">02</span><div><b>Claude Code sessions</b><p>Sessions asking for permission or finished, with how long they have waited.</p></div></div>
+      <div class="row"><span class="num">03</span><div><b>Email and calendar</b><p>Your next event and only the emails that need action today.</p></div></div>
+      <div class="foot">Planned device: it will only download a 1-bit image; all logic runs on your Mac. The screen text is in Spanish.</div>
     </div>
   </div>
 
-  <div class="note">Render del concepto con la pantalla real que genera <code>pager/render.py</code>. Hardware planeado; botón “Visto” aún no implementado.</div>
+  <div class="note">Concept render. The screen is the real frame from <code>pager/render.py</code>; the device and its “Visto” (seen) button are planned.</div>
 </body>
 </html>
