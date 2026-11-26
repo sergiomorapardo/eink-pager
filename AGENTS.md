@@ -44,6 +44,8 @@ Use the local commands for the self-review and the GitHub workflow for the requi
   - **Refactor:** restructures existing code without intending to change behavior.
   - **Large:** at least 8 changed files or about 300 changed lines, excluding `uv.lock` and generated images.
   - **Critical:** touches code that can break or cost something outside the repo: `hooks/` (runs inside every Claude Code session), `scripts/install.py` (edits `~/.claude/settings.json`), `pager/digest.py` (spends plan quota and reads email/calendar), `pager/server.py` network exposure, or `.github/` workflows.
+  - **Private data:** adds or changes sample data, fixtures, screenshots, or other content that could expose personal information in this public repository (names, emails, client or project names, local paths). The review must check for it before anything is pushed.
+  - **Firmware:** touches `firmware/` code, where a bug can stop the device from booting or drain its battery, and fixing it means reflashing the device.
 - For other PRs (docs, tests, small features or fixes), rely on local checks, a manual read of the diff, and the GitHub Claude review. State in the PR body whether `/code-review` ran and why.
 - Fix confirmed findings before pushing and mention skipped ones in the PR body. Use `/code-review high --fix` only for findings you have verified.
 - When a qualifying PR gets a substantive revision, run `/code-review high` again only on that revision's diff.
