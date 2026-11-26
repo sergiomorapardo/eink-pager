@@ -8,11 +8,10 @@ Built with Python and Pillow for a 296×128 black-and-white e-paper display.
 1-bit frame, and serves a [web simulator](#run-the-simulator). The email/calendar digest runs
 with sample data. The ESP32 device and scheduled digests are [planned stages](TODO.md).
 
-![Pager frame with plan usage at the top, two Claude Code sessions in the middle, and the email/calendar digest at the bottom](docs/preview.png)
+![Concept render of the pager: a small off-white device with an e-paper screen showing plan usage, two Claude Code sessions, and the email/calendar digest, next to a card explaining the three zones](docs/images/hero.png)
 
-*A rendered frame, scaled 3×, with sample data. On-device text is in Spanish: "permiso: Bash" means
-a session needs permission to run Bash, "listo" means it finished, and when nothing needs you the
-middle area reads "Nada te necesita".*
+*Concept render with sample data. The screen is the real 1-bit frame from `pager/render.py`; the
+device and its "Visto" (seen) button are planned. On-device text is in Spanish.*
 
 ```mermaid
 flowchart LR
@@ -72,6 +71,12 @@ The server has no authentication and listens on `127.0.0.1` by default. Use `--h
 only on a trusted network, when the device needs to reach it.
 
 ## Explore the screen states
+
+![Raw 1-bit frame, scaled 3×](docs/preview.png)
+
+*The raw frame the server serves at `/frame.png`. "permiso: Bash" means a session needs permission
+to run Bash, "listo" means it finished, and when nothing needs you the middle area reads
+"Nada te necesita".*
 
 Sessions that need you appear first. A permission request is drawn inverted so it stands out.
 
@@ -153,6 +158,7 @@ The prompt forbids changes to mail or calendars: nothing is marked as read, answ
 | [Hooks](hooks) | Hook forwarder and statusline wrapper |
 | [Installer](scripts/install.py) | Changes to Claude Code settings |
 | [Firmware](firmware/README.md) | Planned hardware and device loop |
+| [Images](scripts/shots.py) | Regenerates `docs/preview.png` and the hero render with sample data |
 | [Tests](tests/test_pager.py) | Offline checks |
 | [CI](.github/workflows) | Validation, PR size limit, and Claude review |
 | [TODO](TODO.md) | Pending decisions, software, and hardware work |

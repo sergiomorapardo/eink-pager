@@ -3,7 +3,7 @@
 ## Project rules
 
 - Python 3.12 with uv. Only runtime dependency: Pillow; the server uses the stdlib `http.server`.
-- Run `uv run pytest` before every commit. After changing `pager/render.py`, regenerate `docs/preview.png` and look at it.
+- Run `uv run pytest` before every commit. After changing `pager/render.py` or `scripts/hero.html`, run `uv run python scripts/shots.py` (needs Chrome) and look at `docs/preview.png` and `docs/images/hero.png`.
 - `python -m pager.digest` without `--dry-run` calls `claude -p` and spends the user's plan quota. Ask for explicit approval before running it and report the cost of the previous run.
 - Never edit `~/.claude/settings.json` (e.g. `scripts/install.py --apply`) without explicit approval.
 - Claude Code hooks must never block or fail a session: short timeouts, background work, exit 0.
