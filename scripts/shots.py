@@ -80,17 +80,21 @@ def find_chrome() -> str:
 
 def screenshot(html: Path, out: Path, profile: Path) -> None:
     """Captura html en out con Chrome headless y comprueba que de verdad se escribió."""
-    chrome = find_chrome()  # antes de borrar nada: si falla, la imagen anterior se conserva
-    out.unlink(missing_ok=True)
+    # Chrome escribe en un archivo temporal; solo si sale bien reemplaza la imagen,
+    # así un fallo o timeout nunca deja el repo sin hero.png.
+    chrome = find_chrome()
+    tmp_out = profile.parent / "hero.png"
     cmd = [chrome, "--headless=new", "--disable-gpu", "--hide-scrollbars",
            f"--user-data-dir={profile}", "--force-device-scale-factor=1",
-           "--window-size=1600,1080", f"--screenshot={out}", html.as_uri()]
+           "--window-size=1600,1080", f"--screenshot={tmp_out}", html.as_uri()]
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
     except subprocess.TimeoutExpired:
-        sys.exit("Chrome no terminó en 60 s; no se generó el hero.")
-    if result.returncode != 0 or not out.exists() or out.stat().st_size == 0:
-        sys.exit(f"Chrome no escribió {out.name} (código {result.returncode}):\n{result.stderr[-2000:]}")
+        sys.exit("Chrome no terminó en 60 s; se conserva la imagen anterior.")
+    if result.returncode != 0 or not tmp_out.exists() or tmp_out.stat().st_size == 0:
+        sys.exit(f"Chrome no escribió la captura (código {result.returncode}); se conserva la imagen anterior:\n"
+                 f"{result.stderr[-2000:]}")
+    shutil.move(tmp_out, out)
 
 
 def main():
