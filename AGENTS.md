@@ -12,7 +12,7 @@
 
 ## Current setup
 
-- The repository has no GitHub remote yet. Until it does, work on `feature/<name>` branches in sibling worktrees and leave them unmerged; the pull request and Claude review rules apply once the remote and the Claude review workflow exist.
+- The repository is public on GitHub. The Claude review workflow is not set up yet; until it is, a PR may only merge with an explicit, per-PR user exception recorded on that PR.
 - The initial commit landed directly on `main` before these rules were adopted.
 
 ## Git workflow
