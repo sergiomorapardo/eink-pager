@@ -29,6 +29,25 @@
 - After updating branches or resolving conflicts, rerun relevant checks and re-request review when the changes require it. Verify each PR still changes at most 12 files against its immediate base.
 - Preserve unrelated user changes and do not rewrite remote history or force-push without explicit authorization.
 
+## Claude Code review commands
+
+Use the local commands for the self-review and the GitHub workflow for the required review of each PR.
+
+| Stage | Command | Who starts it |
+| --- | --- | --- |
+| Before opening a PR or pushing a substantive revision | `/code-review high` on the worktree diff | The agent |
+| Ready to publish a feature branch | `/ship` (commit, push, open PR, in-session review, then watch CI, conflicts, and comments) | The user only |
+| PR already open and only needs babysitting | `/steward` (CI failures, conflicts, review comments; no initial review) | The user only |
+| Required review of each PR | `Claude Code Review` workflow, or one `@claude` comment when no equivalent review exists | Automatic on PR events |
+
+- Run `/code-review high` before every push that opens a PR or changes behavior, contracts, or workflow rules. Fix confirmed findings before pushing; mention skipped ones in the PR body. Use `/code-review high --fix` only for findings you have verified.
+- Never use the `max` or `ultra` levels unless the user asks for them; they are the most expensive reviews.
+- Never invoke `/ship` or `/steward` yourself. When a branch is ready, tell the user to type `/ship`; when an open PR only needs babysitting, suggest `/steward`.
+- `/ship` and `/steward` never merge. Merging still follows the rules below, including the user's approval and the squash merge command.
+- The in-session review from `/code-review` or `/ship` is the self-review. It does not replace the GitHub Claude review: each PR still needs its own completed review on GitHub.
+- When `/ship` already reviewed the diff in session, do not run `/code-review` again on the same diff.
+- Managed Claude Code Review, PR Steward, and Claude Approvals (Claude Ship) require a Team or Enterprise plan and a GitHub organization. This repository uses the GitHub Actions workflows until that changes.
+
 ## Commits and pull requests
 
 - Each pull request may change at most 12 files, counting additions, modifications, deletions, configuration, tests, documentation, and lockfiles against its immediate base branch.
@@ -41,7 +60,7 @@
 - Preserve unmerged work and report any skipped branches instead of forcing removal.
 - Review each finished pull request and run checks appropriate to its stage before proceeding. State any validation that requires a later integration layer.
 - The review unit is each individual PR against its immediate base, never a group of pushes or an entire stack. Each PR needs its own completed Claude review; a review of another PR cannot satisfy that requirement.
-- Optimize total Claude Opus executions per PR, including automatic push-triggered runs and manual mentions. Prepare and self-review that PR's complete diff, run relevant local checks, and batch all findings from a review round of that same PR before publishing its next substantive revision. Reducing mentions alone is not sufficient.
+- Optimize total Claude Opus executions per PR, including automatic push-triggered runs and manual mentions. Prepare and self-review that PR's complete diff (see Claude Code review commands), run relevant local checks, and batch all findings from a review round of that same PR before publishing its next substantive revision. Reducing mentions alone is not sufficient.
 - Before every push, account for automatic review triggers and dependent branches. Complete the current PR's review cycle before advancing to the next dependent layer; do not trigger reviews across other PRs as if a group of pushes were a review unit.
 - Before integrating independent PRs, inspect their bases, completed reviews, and automatic triggers. Choose an order that avoids invalidating completed reviews by merging documentation or another independent change first. Do not mechanically rebase or push an already reviewed PR without assessing whether the update is required and the cost of another review; still perform required base updates. Inform the user before causing an additional review and explain why it is needed.
 - An explicit user exception to the reviewer requirement applies only to the identified PR. Record the exception, completed checks, and remaining limitations on that PR; it does not waive review for future PRs.
