@@ -1,23 +1,22 @@
 name: Claude Code Review
 
 on:
+  # Una sola revisión por PR para cuidar la cuota: corre cuando un draft se marca
+  # "Ready for review". Los pushes no la disparan. Para una segunda revisión después
+  # de cambios importantes, agrega la etiqueta `claude-review` (quítala y vuelve a
+  # ponerla para repetir).
   pull_request:
-    types: [opened, synchronize, ready_for_review, reopened]
-    # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
-    #   - "src/**/*.tsx"
-    #   - "src/**/*.js"
-    #   - "src/**/*.jsx"
+    types: [ready_for_review, labeled]
+
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
 
 jobs:
   claude-review:
-    # Optional: Filter by PR author
-    # if: |
-    #   github.event.pull_request.user.login == 'external-contributor' ||
-    #   github.event.pull_request.user.login == 'new-developer' ||
-    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
-
+    if: >-
+      github.event.action == 'ready_for_review' ||
+      (github.event.action == 'labeled' && github.event.label.name == 'claude-review')
     runs-on: ubuntu-latest
     permissions:
       contents: read
