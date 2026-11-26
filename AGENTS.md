@@ -35,12 +35,18 @@ Use the local commands for the self-review and the GitHub workflow for the requi
 
 | Stage | Command | Who starts it |
 | --- | --- | --- |
-| Before opening a PR or pushing a substantive revision | `/code-review high` on the worktree diff | The agent |
+| Before opening a PR that qualifies (see below) | `/code-review high` on the worktree diff | The agent |
 | Ready to publish a feature branch | `/ship` (commit, push, open PR, in-session review, then watch CI, conflicts, and comments) | The user only |
 | PR already open and only needs babysitting | `/steward` (CI failures, conflicts, review comments; no initial review) | The user only |
 | Required review of each PR | `Claude Code Review` workflow, or one `@claude` comment when no equivalent review exists | Automatic on PR events |
 
-- Run `/code-review high` before every push that opens a PR or changes behavior, contracts, or workflow rules. Fix confirmed findings before pushing; mention skipped ones in the PR body. Use `/code-review high --fix` only for findings you have verified.
+- Run `/code-review high` only when a PR meets at least one of these criteria:
+  - **Refactor:** restructures existing code without intending to change behavior.
+  - **Large:** at least 8 changed files or about 300 changed lines, excluding `uv.lock` and generated images.
+  - **Critical:** touches code that can break or cost something outside the repo: `hooks/` (runs inside every Claude Code session), `scripts/install.py` (edits `~/.claude/settings.json`), `pager/digest.py` (spends plan quota and reads email/calendar), `pager/server.py` network exposure, or `.github/` workflows.
+- For other PRs (docs, tests, small features or fixes), rely on local checks, a manual read of the diff, and the GitHub Claude review. State in the PR body whether `/code-review` ran and why.
+- Fix confirmed findings before pushing and mention skipped ones in the PR body. Use `/code-review high --fix` only for findings you have verified.
+- When a qualifying PR gets a substantive revision, run `/code-review high` again only on that revision's diff.
 - Never use the `max` or `ultra` levels unless the user asks for them; they are the most expensive reviews.
 - Never invoke `/ship` or `/steward` yourself. When a branch is ready, tell the user to type `/ship`; when an open PR only needs babysitting, suggest `/steward`.
 - `/ship` and `/steward` never merge. Merging still follows the rules below, including the user's approval and the squash merge command.
