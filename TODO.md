@@ -8,8 +8,8 @@
 - [ ] **First real digest run**: `uv run python -m pager.digest` (no `--dry-run`).
   Spends plan quota. Goals: measure cost (tokens/USD) and confirm the Gmail/Calendar
   connectors work inside `claude -p`.
-- [ ] **Private GitHub repo**, push the code, and set up the Claude review workflow
-  so the PR rules in `AGENTS.md` can apply.
+- [x] **Public GitHub repo** with the code pushed.
+- [ ] **`CLAUDE_CODE_OAUTH_TOKEN` secret** in the repo so the Claude review workflow can run.
 
 ## Software
 
@@ -20,7 +20,8 @@
 - [ ] Hide `done` sessions after a while (they currently last up to 6 h).
 - [ ] Visual alert when 5-hour usage crosses a threshold (e.g. 80%).
 - [ ] Show when the digest is stale (e.g. more than 2 h without updates).
-- [ ] Port `merge_pr.py` / `cleanup_merged.py` from AgenticDebtCollection, with a confirmation step before deleting anything.
+- [ ] Port `merge_pr.py` / `cleanup_merged.py` from AgenticDebtCollection to automate merge + worktree cleanup.
+- [ ] Add ruff (lint + format check) to the project and to CI.
 
 ## Hardware
 

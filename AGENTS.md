@@ -12,7 +12,8 @@
 
 ## Current setup
 
-- The repository is public on GitHub. The Claude review workflow is not set up yet; until it is, a PR may only merge with an explicit, per-PR user exception recorded on that PR.
+- The repository is public on GitHub. `.github/workflows/` runs `local-validation` (CI), `review-size` (at most 12 files), and the Claude review; the review needs the `CLAUDE_CODE_OAUTH_TOKEN` secret.
+- A ruleset protects `main`: no deletion, no force push, changes only through pull requests with squash merge, and `local-validation` and `review-size` must pass on an up-to-date branch.
 - The initial commit landed directly on `main` before these rules were adopted.
 
 ## Git workflow
@@ -35,7 +36,8 @@
 - Group each commit by responsibility. Prefer multiple meaningful commits in a pull request; never combine unrelated groups merely to create a single commit.
 - Keep automatic deletion of remote source branches enabled after pull requests are merged. Do not recreate a merged branch merely to preserve its name; use the pull request to inspect its original commits.
 - Merge from the clean primary checkout with `gh pr merge <PR-number> --squash --match-head-commit <head-sha>`, then run `git pull --ff-only origin main`. For a merge performed on GitHub, finalize locally with the same pull.
-- After each squash merge, list the merged local branches and their worktrees (`git worktree list`, `git branch --merged main`, plus tree equality against current main for squashed branches) and propose their removal. Never delete a branch or worktree without the user's explicit confirmation for that cleanup. Keep the primary checkout and any open, closed-without-merge, dirty, locked, active, or divergent worktree.
+- After each squash merge, remove the merged pull request's worktree (`git worktree remove <path>`) and its local branch (`git branch -D feature/<name>`) once the squash commit is on the refreshed `main` and the branch tree matches it. Also remove older worktrees whose pull requests are already merged. Run the cleanup from the primary checkout, never from inside the worktree being removed.
+- Never remove the primary checkout or a worktree that is dirty, locked, active in another session, divergent from its merged pull request, or tied to an open or closed-without-merge pull request.
 - Preserve unmerged work and report any skipped branches instead of forcing removal.
 - Review each finished pull request and run checks appropriate to its stage before proceeding. State any validation that requires a later integration layer.
 - The review unit is each individual PR against its immediate base, never a group of pushes or an entire stack. Each PR needs its own completed Claude review; a review of another PR cannot satisfy that requirement.
